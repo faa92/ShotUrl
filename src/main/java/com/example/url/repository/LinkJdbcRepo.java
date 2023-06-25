@@ -30,12 +30,10 @@ public class LinkJdbcRepo implements LinkRepo{
     }
 
     @Override
-    public boolean delete(long id) {
-        return false;
-    }
-
-    @Override
-    public boolean updateLink(long id) {
-        return false;
+    public void delete(long id) {
+        jdbcOperations.update("""
+                    DELETE FROM users_links
+                    WHERE id = ?;
+""",id);
     }
 }
