@@ -12,4 +12,9 @@ WHERE id = 1;
 INSERT INTO  users_links (long_url)
 VALUES (1234);
 
-SELECT
+
+CREATE TABLE users_links (
+id          BIGSERIAL PRIMARY KEY,
+long_url    TEXT NOT NULL UNIQUE,
+shot_url    TEXT NOT NULL UNIQUE DEFAULT substr(md5(random()::text || clock_timestamp()::text), 1, 5)
+);
