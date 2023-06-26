@@ -28,26 +28,27 @@ public class LinkJdbcRepo implements LinkRepo{
         ));
     }
     @Override
-    public String findShotUrlById(long id) {
+    public String findShotUrlByLongUrl(String longUrl) {
         return jdbcOperations.queryForObject("""
                         SELECT  shot_url
                         FROM    users_links
+                        WHERE   long_url = ?
 """, String.class);
     }
 
     @Override
-    public void createNewLink(String url) {
+    public void createShotLink(String longUrl) {
         jdbcOperations.update("""
                     INSERT INTO users_links (long_url)
                     VALUES ?
-""", url);
+""", longUrl);
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(String longUrl) {
         jdbcOperations.update("""
                     DELETE FROM users_links
-                    WHERE id = ?;
-""",id);
+                    WHERE long_url = ?;
+""",longUrl);
     }
 }

@@ -8,10 +8,10 @@ import java.util.List;
 public interface LinkRepo {
 
     List<UserProfile> getAllProfiles();
-    String findShotUrlById (long id);
-    void createNewLink(String url);
+    String findShotUrlByLongUrl (String longUrl);
+    void createShotLink(String url);
 
-    void delete (long id);
+    void delete (String longUrl);
 
 
 
