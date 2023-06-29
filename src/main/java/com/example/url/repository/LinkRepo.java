@@ -1,17 +1,15 @@
 package com.example.url.repository;
 
 
-import com.example.url.model.UserProfile;
+import com.example.url.model.Link;
 
-import java.util.List;
+import java.net.URI;
+import java.util.Optional;
 
 public interface LinkRepo {
 
-    List<UserProfile> getAllProfiles();
-    String findShotUrlByLongUrl (String longUrl);
-    void createShotLink(String url);
-
-    void delete (String longUrl);
+    Optional<Link> findById(long id);
+    Link create(URI url);
 
 
 

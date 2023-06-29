@@ -1,54 +1,51 @@
 package com.example.url.repository;
 
-import com.example.url.model.UserProfile;
-import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.JdbcOperations;
+import com.example.url.model.Link;
+import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 
+import java.net.URI;
 import java.sql.ResultSet;
-import java.util.List;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class LinkJdbcRepo implements LinkRepo{
-    private final JdbcOperations jdbcOperations;
+    private final NamedParameterJdbcOperations jdbcOperations;
 
-    public LinkJdbcRepo(JdbcOperations jdbcOperations) {
-        this.jdbcOperations = jdbcOperations;
-    }
 
     @Override
-    public List<UserProfile> getAllProfiles() {
-        return jdbcOperations.query("""
-                SELECT *
-                FROM user_links
-                """, (rs, rowNum) -> new UserProfile(
-                        rs.getLong("id"),
-                        rs.getString("long_url"),
-                        rs.getString("shot_url")
-        ));
+    public Optional<Link> findById(long id) {
+        String sql = """
+                SELECT id, url
+                FROM users_links
+                WHERE  id = :linkId
+                """;
+        return jdbcOperations.query(sql, Map.of("linkId", id), this::mapToLink)
+                .stream()
+                .findFirst();
     }
     @Override
-    public String findShotUrlByLongUrl(String longUrl) {
-        return jdbcOperations.queryForObject("""
-                        SELECT  shot_url
-                        FROM    users_links
-                        WHERE   long_url = ?
-""", String.class);
+    public Link create(URI url) {
+        String sql = """
+                INSERT INTO users_links (url)
+                VALUES (:url)
+                RETURNING id
+                """;
+        Integer id = jdbcOperations.queryForObject(sql,
+                Map.of("url", url.toString()), Integer.class);
+        return new Link(id, url);
     }
 
-    @Override
-    public void createShotLink(String longUrl) {
-        jdbcOperations.update("""
-                    INSERT INTO users_links (long_url)
-                    VALUES ?
-""", longUrl);
+    private Link mapToLink(ResultSet resultSet, int rowNum) throws SQLException {
+        return new Link(
+                resultSet.getLong("id"),
+                URI.create(resultSet.getString("url"))
+        );
     }
 
-    @Override
-    public void delete(String longUrl) {
-        jdbcOperations.update("""
-                    DELETE FROM users_links
-                    WHERE long_url = ?;
-""",longUrl);
-    }
+
 }
