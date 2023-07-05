@@ -25,20 +25,23 @@ public class LinkServiceImpl implements LinkService{
 
     private final BlackList blackList;
     private final LinkRepo linkRepo;
-    @Transactional(rollbackFor = IOException.class)
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Optional<Link> findById(long id) {
         return linkRepo.findById(id);
     }
-    @Transactional(rollbackFor = IOException.class)
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public Link create(URI url) { //todo
-        if (isValidateUrl(url)) {
-            return linkRepo.create(url);
-        } else throw new IllegalArgumentException("Invalid URL");
+    public Link create(URI url) {
+        try {
+            if (isValidateUrl(url)) {
+                return linkRepo.create(url);
+            } else throw new IllegalArgumentException("Invalid URL");
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
-    private boolean isValidateUrl (String longUrl) throws URISyntaxException {
-        URI url = new URI(longUrl);
+    private boolean isValidateUrl (URI url) throws URISyntaxException {
         if (url.getScheme().equals(VALID_SCHEME_HTTP) || url.getScheme().equals(VALID_SCHEME_HTTPS)) {
             for(String link : blackList.getBlackList()) {
                 if (url.getHost().equals(link)) {

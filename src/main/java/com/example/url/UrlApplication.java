@@ -24,7 +24,7 @@ public class UrlApplication {
 //		Link link = linkRepo.create(URI.create("https://google.com"));
 //		Optional<Link> byId = linkRepo.findById(2);
 
-		Link link = linkService.create(URI.create("vk.ru"));
+		Link link = linkService.create(URI.create("https://vk.ru"));
 
 
 	}
