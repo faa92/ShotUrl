@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ShotUserUrl
-    username: postgres
+    username: antonfedoseev
     password:
 
 logging:
