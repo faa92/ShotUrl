@@ -4,6 +4,8 @@ import com.example.url.model.Link;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.sql.ResultSet;
@@ -13,6 +15,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional(propagation = Propagation.MANDATORY)
 public class LinkJdbcRepo implements LinkRepo{
     private final NamedParameterJdbcOperations jdbcOperations;
 

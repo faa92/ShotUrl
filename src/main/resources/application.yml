@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: url
+
+url:
+  link:
+    url-host-blacklist:
+      - vk.ru
+      - yandex.ru
+      - google.com
+    url-allowed-schemes:
+      - http
+      - https
