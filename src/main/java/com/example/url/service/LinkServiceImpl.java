@@ -1,5 +1,6 @@
 package com.example.url.service;
 
+import com.example.url.exception.BusinessException;
 import com.example.url.model.Link;
 import com.example.url.model.LinkProperties;
 import com.example.url.repository.LinkRepo;
@@ -24,7 +25,7 @@ public class LinkServiceImpl implements LinkService{
     @Override
     public Link getById(long id) {
         return linkRepo.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(()-> new BusinessException("Ссылка не найдена"));
     }
 
     @Transactional
@@ -33,7 +34,11 @@ public class LinkServiceImpl implements LinkService{
         Set<String> urlAllowedSchemes = linkProperties.getUrlAllowedSchemes();
         String scheme = url.getScheme();
         if (!urlAllowedSchemes.contains(scheme)){
-            throw new IllegalArgumentException();
+            throw new BusinessException("Неверный адрес");
+        }
+        String host = url.getHost();
+        if (linkProperties.getUrlHostBlacklist().contains(host)){
+            throw new BusinessException("Сайт в чёрном списке");
         }
         return linkRepo.create(url);
     }

@@ -17,14 +17,7 @@ public class UrlApplication {
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(UrlApplication.class, args);
-
-		LinkService linkService = context.getBean(LinkService.class);
-		Link link = linkService.create(URI.create("http://yahoo.com"));
-		Link byId = linkService.getById(3);
-		System.out.println(byId);
-
 	}
-
 }
 
 
