@@ -1,7 +1,9 @@
 package com.example.url.repository;
 
 import com.example.url.model.Link;
+import com.example.url.util.CollectionUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -10,8 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
+import static com.example.url.util.CollectionUtil.toLongArray;
 
 @Repository
 @RequiredArgsConstructor
@@ -43,12 +46,23 @@ public class LinkJdbcRepo implements LinkRepo{
         return new Link(id, url);
     }
 
+    @Override
+    public List<Link> findByIds(Set<Long> ids) {
+        long[] idsArray = CollectionUtil.toLongArray(ids);
+        return jdbcOperations.query("""
+                SELECT id, url
+                FROM users_links
+                WHERE id = ANY(:ids)
+                """,
+        Map.of("ids", idsArray),
+                this ::mapToLink);
+
+    }
+
     private Link mapToLink(ResultSet resultSet, int rowNum) throws SQLException {
         return new Link(
                 resultSet.getLong("id"),
                 URI.create(resultSet.getString("url"))
         );
     }
-
-
 }
