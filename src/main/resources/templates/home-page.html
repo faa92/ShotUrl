@@ -8,13 +8,25 @@
     <head>
         <meta charset="UTF-8">
         <title>ShortURL</title>
-        <link rel="stylesheet" type="text/css" href="/css/style.css"
+        <link rel="stylesheet"
+              type="text/css"
+              href="/css/style.css"
         th:href="@{/css/style.css}">
     </head>
     <body>
      <header>
-         <h1>ShortUrl</h1>
+         <h1>
+             <a th:href="@{/}"
+                href="home-page.html">
+                 ShortUrl
+             </a>
+         </h1>
+         <p th:if="${userStatus.isFirstVisit()}">
+             Добро пожаловать!
+         </p>
+
      </header>
+
      <section>
          <form method="post"
                action="/shorten"
@@ -27,17 +39,23 @@
              <button type="submit">Сократить</button>
          </form>
      </section>
-    <section th:if="${shortLink != null}">
+
+    <section th:if="${shortLink != null and userStatus.getLastVisited() != null}" >
+
+<!--        <section th:if="${userStatus.isFirstVisit()}">-->
+
+<!--        </section>-->
+
         <h2>Сокращённые ссылки</h2>
         <div>
-            <a href="https://en.wikipedia.org/wiki/Cat"
+            <a href="https://localhost:8080"
                th:href="${shortLink.getUrl()}"
                th:text="${shortLink.getUrl()}">
-                https://en.wikipedia.org/wiki/Cat
+                https://localhost:8080
             </a>
             ️   ◀️ ◀️ ◀️
             <span th:text="${baseShortLinkUrl + shortLink.getId()}">
-                          http://localhost:8080/to/323
+                          http://localhost:8080/to/12345
             </span>
         </div>
     </section>

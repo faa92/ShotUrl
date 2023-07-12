@@ -35,6 +35,8 @@ public abstract class LinkController {
         UserStatus userStatus = userSessionService.getStatusOnVisit();//todo
         log.warn("!!!!!!!РАБОТАЕТ???!!!!!!!!");
 
+
+
         Link shortenedLink = shotLinkId == null
                 ? null
                 : linkService.getById(shotLinkId);
