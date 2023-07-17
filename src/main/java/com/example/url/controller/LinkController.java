@@ -1,11 +1,9 @@
 package com.example.url.controller;
 
 import com.example.url.model.Link;
-import com.example.url.model.UserStatus;
 import com.example.url.service.LinkService;
 import com.example.url.service.UserSessionService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,36 +17,32 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
-@Slf4j
 public abstract class LinkController {
 
     private final LinkService linkService;
     @Lookup
     protected  abstract UserSessionService getUserSessionService();
     @GetMapping("/")
-    public ModelAndView getHomePage(@RequestParam(required = false)Long shotLinkId, UriComponentsBuilder urlBuilder) {
+    public ModelAndView getHomePage(UriComponentsBuilder urlBuilder) {
         UserSessionService userSessionService = getUserSessionService();
-        UserStatus userStatus = userSessionService.getStatusOnVisit();//todo
-        log.warn("!!!!!!!РАБОТАЕТ???!!!!!!!!");
+        Set<Long> shortLinkIds = userSessionService.getLinksHistory();
 
+        List<Link> sortLinks = linkService.getByIds(shortLinkIds);
 
-
-        Link shortenedLink = shotLinkId == null
-                ? null
-                : linkService.getById(shotLinkId);
         String baseShortLinkUrl  = urlBuilder
                 .path("/to/")
                 .build()
                 .toUriString();
 
         Map<String, Object> model = new HashMap<>();
-        model.put("shortLink", shortenedLink);
+        model.put("shortLinks", sortLinks);
         model.put("baseShortLinkUrl", baseShortLinkUrl);
-        model.put("userStatus", userStatus);
 
         return new ModelAndView("home-page", model);
     }
@@ -56,9 +50,11 @@ public abstract class LinkController {
     public ResponseEntity<?> create (@RequestParam URI url, UriComponentsBuilder urlBuilder){
         Link link = linkService.create(url);
 
+        UserSessionService userSessionService = getUserSessionService();
+        userSessionService.addLinkToHistory(link.getId());
+
         URI redirectUrl = urlBuilder
                 .path("/")
-                .queryParam("shortLinkId", link.getId())
                 .build()
                 .toUri();
         return ResponseEntity.status(HttpStatus.FOUND)

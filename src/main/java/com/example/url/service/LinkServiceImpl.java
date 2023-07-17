@@ -4,13 +4,12 @@ import com.example.url.exception.BusinessException;
 import com.example.url.model.Link;
 import com.example.url.model.LinkProperties;
 import com.example.url.repository.LinkRepo;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.html.HTMLTableRowElement;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -42,22 +41,11 @@ public class LinkServiceImpl implements LinkService{
         }
         return linkRepo.create(url);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Transactional
+    @Override
+    public List<Link> getByIds(Set<Long> ids) {
+        return linkRepo.findByIds(ids);
+    }
 
 
 }

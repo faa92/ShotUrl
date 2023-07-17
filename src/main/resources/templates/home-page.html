@@ -21,9 +21,9 @@
                  ShortUrl
              </a>
          </h1>
-         <p th:if="${userStatus.isFirstVisit()}">
-             Добро пожаловать!
-         </p>
+<!--         <p th:if="${userStatus.isFirstVisit()}">-->
+<!--             Добро пожаловать!-->
+<!--         </p>-->
 
      </header>
 
@@ -40,24 +40,21 @@
          </form>
      </section>
 
-    <section th:if="${shortLink != null and userStatus.getLastVisited() != null}" >
-
-<!--        <section th:if="${userStatus.isFirstVisit()}">-->
-
-<!--        </section>-->
-
+    <section th:if="${!shortLinks.isEmpty()}" >
         <h2>Сокращённые ссылки</h2>
-        <div>
-            <a href="https://localhost:8080"
-               th:href="${shortLink.getUrl()}"
-               th:text="${shortLink.getUrl()}">
-                https://localhost:8080
-            </a>
-            ️   ◀️ ◀️ ◀️
-            <span th:text="${baseShortLinkUrl + shortLink.getId()}">
+        <ul th:each="shortLink : ${shortLinks}">
+            <li>
+                <a href="https://en.wikipedia.org/wiki/Cat"
+                   th:href="${shortLink.getLongUrl()}"
+                   th:text="${shortLink.getLongUrl()}">
+                    https://en.wikipedia.org/wiki/Cat
+                </a>
+                ◀️ ◀️ ◀️
+                 <span th:text="${baseShortLinkUrl + shortLink.getId()}">
                           http://localhost:8080/to/12345
-            </span>
-        </div>
+                 </span>
+            </li>
+        </ul>
     </section>
     </body>
 </html>

@@ -1,7 +1,8 @@
 package com.example.url.service;
 
-import com.example.url.model.UserStatus;
+import java.util.Set;
 
 public interface UserSessionService {
-    UserStatus getStatusOnVisit();
+    Set<Long> getLinksHistory();
+    void addLinkToHistory(long linkId);
 }

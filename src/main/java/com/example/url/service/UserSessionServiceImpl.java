@@ -1,29 +1,28 @@
 package com.example.url.service;
 
-import com.example.url.model.UserStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.time.Instant;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Scope(WebApplicationContext.SCOPE_SESSION)
+@RequiredArgsConstructor
 public class UserSessionServiceImpl implements UserSessionService{
 
-    private final AtomicReference<UserStatus> userStatusAtomicReference;
+    private final Set<Long> linkIds = ConcurrentHashMap.newKeySet();
 
-    public UserSessionServiceImpl () {
-        userStatusAtomicReference = new AtomicReference<>(new UserStatus(null));
-    }
+
     @Override
-    public UserStatus getStatusOnVisit() {
-        Instant visitedAt = Instant.now();
-        UserStatus nextStatus = new UserStatus(visitedAt);
-        UserStatus currentStatus = userStatusAtomicReference.getAndSet(nextStatus);
-
-        return currentStatus;
+    public Set<Long> getLinksHistory() {
+        return Set.copyOf(linkIds);
     }
 
+    @Override
+    public void addLinkToHistory(long linkId) {
+        linkIds.add(linkId);
+    }
 }
