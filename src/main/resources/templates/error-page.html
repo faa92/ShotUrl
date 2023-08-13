@@ -1,0 +1,20 @@
+<!--/*@thymesVar id="errorMessage" type="java.lang.String"*/-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <title>ShortUrl</title>
+     <link rel="stylesheet" type="text/css" href="/css/style.css"
+           th:href="@{/css/style.css}">
+
+ </head>
+  <body>
+   <h1>Ошибка</h1>
+   <p th:text="${errorMessage}">
+       Ссылка не найдена
+   </p>
+ </body>
+</html>
