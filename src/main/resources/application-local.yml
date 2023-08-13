@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ShotUserUrl
+    username: antonfedoseev
+    password:
+
+logging:
+  level:
+    org.springframework.jdbc.core.JdbcTemplate: trace

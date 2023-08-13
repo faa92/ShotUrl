@@ -1,0 +1,68 @@
+<!--/*@thymesVar id="shortLink" type="com.example.url.model.Link"*/-->
+<!--/*@thymesVar id="baseShortLinkUrl" type="java.lang.String"*/-->
+
+<!DOCTYPE html>
+<html lang="en"
+       xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>ShortURL</title>
+        <link rel="stylesheet"
+              type="text/css"
+              href="/css/style.css"
+        th:href="@{/css/style.css}">
+    </head>
+    <body>
+     <header>
+         <h1>
+             <a th:href="@{/}"
+                href="home-page.html">
+                 ShortUrl
+             </a>
+         </h1>
+<!--         <p th:if="${userStatus.isFirstVisit()}">-->
+<!--             Добро пожаловать!-->
+<!--         </p>-->
+
+     </header>
+
+     <section>
+         <form method="post"
+               action="/shorten"
+               enctype="application/x-www-form-urlencoded"
+               th:action="@{/shorten}">
+             <div>
+                 <label for="cut-url">Адрес</label>
+                 <input type="text" name="url" id="cut-url">
+             </div>
+             <button type="submit">Сократить</button>
+         </form>
+     </section>
+
+    <section th:if="${!shortLinks.isEmpty()}" >
+        <h2>Сокращённые ссылки</h2>
+        <ul th:each="shortLink : ${shortLinks}">
+            <li>
+                <a href="https://en.wikipedia.org/wiki/Cat"
+                   th:href="${shortLink.getLongUrl()}"
+                   th:text="${shortLink.getLongUrl()}">
+                    https://en.wikipedia.org/wiki/Cat
+                </a>
+                ◀️ ◀️ ◀️
+                 <span th:text="${baseShortLinkUrl + shortLink.getId()}">
+                          http://localhost:8080/to/12345
+                 </span>
+            </li>
+        </ul>
+    </section>
+    </body>
+</html>
+
+
+
+
+
+
+
+
